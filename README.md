@@ -1,4 +1,4 @@
-# Projeto 02 — Formulário de Orçamento
+# Projeto — Formulário de Orçamento
 
 Formulário profissional para solicitação de orçamentos de serviços de desenvolvimento web, construído com HTML, CSS, JavaScript e PHP.
 

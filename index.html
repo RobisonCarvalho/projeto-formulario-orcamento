@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Solicitar orçamento</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="form-section">
+
+            <header class="form-header">
+                <span class="form-label">VAMOS CONVERSAR</span>
+
+                <h1>Solicite o seu orçamento</h1>
+
+                <p>
+                    Conte-nos um pouco sobre o que precisa.
+                    Vamos analisar o seu pedido e entrar em contacto.
+                </p>
+            </header>
+
+            <form id="budgetForm" enctype="multipart/form-data">
+
+                <div id="formMessage" class="form-message" role="alert"></div>
+
+                <div class="form-group">
+                    <label for="name">Nome completo</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="O seu nome"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="exemplo@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="+351 900 000 000"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="service">Tipo de serviço</label>
+
+                    <select id="service" name="service" required>
+                        <option value="">Selecione um serviço</option>
+                        <option value="website">Criação de website</option>
+                        <option value="landing-page">Landing page</option>
+                        <option value="redesign">Redesign de website</option>
+                        <option value="other">Outro serviço</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descreva o que precisa</label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        placeholder="Conte-nos um pouco sobre o seu projeto..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="attachments">
+                        Anexar referências (opcional)
+                    </label>
+
+                    <input
+                        type="file"
+                        id="attachments"
+                        name="attachments[]"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        multiple
+                    >
+
+                    <small>
+                        Até 3 arquivos, máximo de 5 MB cada.
+                        Formatos: PDF, JPG e PNG.
+                    </small>
+
+                </div>
+
+                <button type="submit">
+                    Solicitar orçamento
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>

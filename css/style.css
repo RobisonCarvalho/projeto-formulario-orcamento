@@ -1,0 +1,246 @@
+/* =================================
+   PROJETO: FORMULÁRIO DE ORÇAMENTO
+   IDENTIDADE VISUAL
+================================= */
+
+/* Fontes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+
+/* Cores e configurações */
+:root {
+    --color-wine: #A95332;
+    --color-sand: #EDEBE4;
+    --color-beige: #BAB5A0;
+    --color-green: #353524;
+    --color-black: #000000;
+    --color-white: #FFFFFF;
+
+    --font-heading: 'Montserrat', Arial, sans-serif;
+    --font-body: 'Inter', Arial, sans-serif;
+}
+
+/* RESET E CONFIGURAÇÕES GERAIS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-sand);
+    color: var(--color-black);
+    line-height: 1.6;
+}
+
+/* CONTAINER PRINCIPAL */
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* ÁREA DO FORMULÁRIO */
+
+.form-section {
+    width: 100%;
+    max-width: 680px;
+    background-color: var(--color-white);
+    padding: 48px;
+    border-radius: 12px;
+}
+
+/* CABEÇALHO */
+
+.form-header {
+    margin-bottom: 35px;
+}
+
+.form-label {
+    color: var(--color-wine);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.form-header h1 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--color-green);
+    margin: 12px 0;
+}
+
+.form-header p {
+    color: #666666;
+    font-size: 15px;
+}
+
+/* CAMPOS DO FORMULÁRIO */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-green);
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-black);
+    background-color: var(--color-sand);
+    border: 1px solid var(--color-beige);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* EFEITO AO CLICAR NOS CAMPOS */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-wine);
+    box-shadow: 0 0 0 3px rgba(169, 83, 50, 0.12);
+}
+
+/* CAMPO DE TEXTO */
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+/* PLACEHOLDER */
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #888888;
+}
+
+/* BOTÃO */
+
+button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--color-wine);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--color-green);
+}
+
+button[type="submit"]:active {
+    transform: scale(0.99);
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 20px 14px;
+        align-items: flex-start;
+    }
+
+    .form-section {
+        padding: 28px 20px;
+        border-radius: 8px;
+    }
+
+    .form-header h1 {
+        font-size: 26px;
+    }
+
+    .form-header p {
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 13px;
+    }
+
+    button[type="submit"] {
+        padding: 15px;
+    }
+}
+
+/* MENSAGENS DO FORMULÁRIO */
+
+.form-message {
+    display: none;
+    padding: 14px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-message.error {
+    display: block;
+    background-color: #F8E8E3;
+    color: #A95332;
+}
+
+.form-message.success {
+    display: block;
+    background-color: #E8EDE5;
+    color: #353524;
+}
+
+/* CAMPO DE ANEXOS */
+
+.form-group input[type="file"] {
+    padding: 12px;
+    background-color: var(--color-sand);
+    border: 1px dashed var(--color-beige);
+    cursor: pointer;
+}
+
+/* BOTÃO DE SELEÇÃO DE ARQUIVOS */
+
+.form-group input[type="file"]::file-selector-button {
+    padding: 9px 14px;
+    margin-right: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--color-green);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* TEXTO DE ORIENTAÇÃO */
+
+.form-group small {
+    margin-top: 8px;
+    color: #777777;
+    font-size: 12px;
+    line-height: 1.5;
+}

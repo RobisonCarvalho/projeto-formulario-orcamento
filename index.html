@@ -14,12 +14,12 @@
 
     <main class="container">
 
-        <section class="form-section">
+        <section class="form-section" aria-labelledby="formTitle">
 
             <header class="form-header">
                 <span class="form-label">VAMOS CONVERSAR</span>
 
-                <h1>Solicite o seu orçamento</h1>
+                <h1 id="formTitle">Solicite o seu orçamento</h1>
 
                 <p>
                     Conte-nos um pouco sobre o que precisa.
@@ -71,7 +71,7 @@
                     <label for="service">Tipo de serviço</label>
 
                     <select id="service" name="service" required>
-                        <option value="">Selecione um serviço</option>
+                        <option value="" selected disabled>Selecione um serviço</option>
                         <option value="website">Criação de website</option>
                         <option value="landing-page">Landing page</option>
                         <option value="redesign">Redesign de website</option>
@@ -102,10 +102,11 @@
                         id="attachments"
                         name="attachments[]"
                         accept=".pdf,.jpg,.jpeg,.png"
+                        aria-describedby="attachmentHelp"
                         multiple
                     >
 
-                    <small>
+                    <small id="attachmentHelp">
                         Até 3 arquivos, máximo de 5 MB cada.
                         Formatos: PDF, JPG e PNG.
                     </small>

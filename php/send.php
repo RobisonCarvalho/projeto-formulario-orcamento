@@ -1,6 +1,15 @@
+
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 header('Content-Type: application/json; charset=UTF-8');
+
+// Carregar o PHPMailer
+require __DIR__ . '/../vendor/autoload.php';
+
+// Carregar as configurações SMTP
+$config = require __DIR__ . '/../config/mail.php';
 
 // Função para responder ao JavaScript
 function responder($status, $mensagem) {
@@ -95,47 +104,38 @@ $files = $_FILES['attachments'] ?? null;
 
 if ($files !== null) {
 
-    // Verificar quantidade de arquivos
     $totalFiles = count($files['name']);
 
     if ($totalFiles > $maxFiles) {
         responder(400, 'Pode anexar no máximo 3 arquivos.');
     }
 
-    // Verificar cada arquivo
     $finfo = new finfo(FILEINFO_MIME_TYPE);
 
     for ($i = 0; $i < $totalFiles; $i++) {
 
-        // Ignorar campo vazio
         if ($files['error'][$i] === UPLOAD_ERR_NO_FILE) {
             continue;
         }
 
-        // Verificar erros de upload
         if ($files['error'][$i] !== UPLOAD_ERR_OK) {
             responder(400, 'Ocorreu um erro durante o envio de um arquivo.');
         }
 
-        // Verificar tamanho
         if ($files['size'][$i] > $maxFileSize) {
             responder(400, 'Cada arquivo deve ter no máximo 5 MB.');
         }
 
-        // Verificar se o arquivo foi realmente enviado
         if (!is_uploaded_file($files['tmp_name'][$i])) {
             responder(400, 'Arquivo inválido.');
         }
 
-        // Obter extensão
         $extension = strtolower(
             pathinfo($files['name'][$i], PATHINFO_EXTENSION)
         );
 
-        // Identificar tipo real do arquivo
         $mimeType = $finfo->file($files['tmp_name'][$i]);
 
-        // Conferir extensão e conteúdo
         if (
             !isset($allowedFiles[$extension]) ||
             $allowedFiles[$extension] !== $mimeType
@@ -145,6 +145,118 @@ if ($files !== null) {
     }
 }
 
-// Se chegou aqui, todos os campos são válidos
-responder(200, 'Dados recebidos e validados com sucesso!');
+// INICIAR ENVIO DO E-MAIL
 
+$mail = new PHPMailer(true);
+
+try {
+
+    // Configurações do servidor SMTP
+    $mail->isSMTP();
+    $mail->Host       = $config['host'];
+    $mail->SMTPAuth   = true;
+    $mail->Username   = $config['username'];
+    $mail->Password   = $config['password'];
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = $config['port'];
+
+    // Configuração do e-mail
+    $mail->CharSet = 'UTF-8';
+
+    // Remetente
+    $mail->setFrom($config['username'], 'Pedidos de Orçamento');
+
+    // Destinatário
+    $mail->addAddress($config['recipient']);
+
+    // Permitir responder diretamente ao cliente
+    $mail->addReplyTo($email, $nome);
+
+    // Definir o assunto
+    $mail->Subject = 'Novo pedido de orçamento - ' . $servico;
+
+    // Ativar o formato HTML
+    $mail->isHTML(true);
+
+    // Preparar dados para exibição segura no HTML
+    $nomeHtml = htmlspecialchars($nome, ENT_QUOTES, 'UTF-8');
+    $emailHtml = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+    $telefoneHtml = htmlspecialchars($telefone, ENT_QUOTES, 'UTF-8');
+    $servicoHtml = htmlspecialchars($servico, ENT_QUOTES, 'UTF-8');
+
+    $descricaoHtml = nl2br(
+        htmlspecialchars($descricao, ENT_QUOTES, 'UTF-8')
+    );
+
+    // Montar o conteúdo HTML
+    $mail->Body = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; color: #353524;'>
+
+            <h2 style='color: #A95332;'>Novo pedido de orçamento</h2>
+
+            <p>Um novo pedido foi enviado pelo formulário do site.</p>
+
+            <hr>
+
+            <h3>Dados do cliente</h3>
+
+            <p><strong>Nome:</strong> {$nomeHtml}</p>
+            <p><strong>E-mail:</strong> {$emailHtml}</p>
+            <p><strong>Telefone:</strong> {$telefoneHtml}</p>
+            <p><strong>Serviço:</strong> {$servicoHtml}</p>
+
+            <hr>
+
+            <h3>Descrição do projeto</h3>
+
+            <p>{$descricaoHtml}</p>
+
+            <hr>
+
+            <p style='font-size: 12px; color: #888;'>
+                Mensagem enviada através do formulário de orçamento.
+            </p>
+
+        </div>
+    ";
+
+    // Versão em texto simples
+    $mail->AltBody =
+        "Novo pedido de orçamento\n\n" .
+        "Nome: {$nome}\n" .
+        "E-mail: {$email}\n" .
+        "Telefone: {$telefone}\n" .
+        "Serviço: {$servico}\n\n" .
+        "Descrição:\n{$descricao}";
+
+    // ADICIONAR ANEXOS
+
+    if ($files !== null) {
+
+        for ($i = 0; $i < count($files['name']); $i++) {
+
+            if ($files['error'][$i] === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+
+            $mail->addAttachment(
+                $files['tmp_name'][$i],
+                basename($files['name'][$i])
+            );
+        }
+    }
+
+    // ENVIAR O E-MAIL
+    $mail->send();
+
+    // Responder ao JavaScript
+    responder(200, 'Pedido de orçamento enviado com sucesso!');
+
+} catch (Throwable $e) {
+
+    // Registrar o erro no log do servidor
+    error_log('Erro no envio do orçamento: ' . $e->getMessage());
+
+    responder(500, 'Não foi possível enviar o orçamento. Tente novamente.');
+
+}

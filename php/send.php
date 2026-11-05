@@ -147,9 +147,10 @@ if ($files !== null) {
 
 // INICIAR ENVIO DO E-MAIL
 
-$mail = new PHPMailer(true);
-
 try {
+
+    // Criar o PHPMailer
+    $mail = new PHPMailer(true);
 
     // Configurações do servidor SMTP
     $mail->isSMTP();

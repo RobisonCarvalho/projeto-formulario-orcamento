@@ -4,7 +4,7 @@ const budgetForm = document.getElementById('budgetForm');
 // Selecionar a área de mensagens
 const formMessage = document.getElementById('formMessage');
 
-if (budgetForm) {
+if (budgetForm && formMessage) {
 
     console.log('Formulário de orçamento carregado!');
 
@@ -16,9 +16,9 @@ if (budgetForm) {
         // Capturar os dados
         const formData = new FormData(budgetForm);
 
-        const name = formData.get('name').trim();
-        const email = formData.get('email').trim();
-        const description = formData.get('description').trim();
+        const name = (formData.get('name') || '').trim();
+        const email = (formData.get('email') || '').trim();
+        const description = (formData.get('description') || '').trim();
 
         // Limpar mensagem anterior
         formMessage.textContent = '';
@@ -83,14 +83,25 @@ if (budgetForm) {
         // Se chegou aqui, passou nas validações
         const submitButton = budgetForm.querySelector('button[type="submit"]');
 
+        if (!submitButton) {
+            showMessage('Botão de envio não encontrado.', 'error');
+            return;
+        }
+
         submitButton.disabled = true;
         submitButton.textContent = 'Enviando...';
 
         fetch('php/send.php', {
-            method: 'POST',
-            body: formData
+        method: 'POST',
+        body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro HTTP: ' + response.status);
+            }
+
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 showMessage(data.message, 'success');
